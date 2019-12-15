@@ -1,6 +1,7 @@
-use std::io;
-
 pub mod tree;
+
+use std::io;
+use tree::Tree;
 
 #[derive(Debug)]
 enum Command {
@@ -53,7 +54,7 @@ fn main() {
 
     loop {
         let mut input = String::new();
-        let mut tree = tree::Tree::new();
+        let mut tree = Tree::new();
 
         match io::stdin().read_line(&mut input) {
             Ok(0) => {
@@ -89,3 +90,4 @@ fn main() {
         }
     }
 }
+
