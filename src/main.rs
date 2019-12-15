@@ -1,5 +1,7 @@
 use std::io;
 
+pub mod tree;
+
 #[derive(Debug)]
 enum Command {
     Insert{age: i32, name: String},
@@ -51,6 +53,7 @@ fn main() {
 
     loop {
         let mut input = String::new();
+        let mut tree = tree::Tree::new();
 
         match io::stdin().read_line(&mut input) {
             Ok(0) => {
@@ -60,14 +63,14 @@ fn main() {
             Ok(_) => {
                 match parse_command(input) {
                     Command::Insert{age, name} => {
-                        unimplemented!();
+                        tree.insert(age, name);
                     },
                     Command::Erase{age, name} => {
                         unimplemented!();
                     },
                     Command::Contains{age, name} => {
-                        unimplemented!();
-                                        }
+                        tree.contains(age, name);
+                    },
                     Command::Print => {
                         unimplemented!();
                     },
