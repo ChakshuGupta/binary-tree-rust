@@ -79,35 +79,40 @@ impl Node{
     }
 
     //Erase a value from the tree
- /*   fn erase(&mut self, age: i32, name: String) -> bool{
+/*    fn erase(&mut self, age: i32, name: String) -> bool{
         match age.cmp(&self.age){
             Ordering::Less => {
                 if let Some(ref mut left) = self.left {
                     left.erase(age, name)
                 } else{
-                    None
+                    false
                 }
             },
             Ordering::Greater => {
                 if let Some(ref mut right) = self.right {
                     right.erase(age, name)
                 } else{
-                    None
+                    false
                 }
             },
             Ordering::Equal =>{
                 match self.name == name{
                     true => {
                         if self.left.is_none() && self.right.is_none(){
-                            true
+                            mem::replace(self, None);
                         }
                         else if self.left.is_none(){
-                            let mut replace = self.right.take();
+                            let replace = self.right.take();
                             mem::replace(self, replace);
-                            true
+                        } else if self.right.is_none(){
+                            let replace = self.left.take();
+                            mem::replace(self, replace)
+                        }else{
+                            // Do Nothing
                         }
+                        false
                     },
-                    false => None,
+                    false => false,
                 }
             }
         }
@@ -167,12 +172,12 @@ impl Tree{
     }
 
     //Erase a value from the tree
-    pub fn erase(&mut self, age: i32, name: String) -> Option<Node> {
-       /* match self.root {
-            None => None,
+    pub fn erase(&mut self, age: i32, name: String) -> bool {
+        /*match self.root {
+            None => false,
             Some(ref mut root) => root.erase(age, name),
         }*/
-        None
+        false
     }
 
 
