@@ -72,7 +72,8 @@ fn main() {
                         tree.contains(age, name);
                     },
                     Command::Print => {
-                        tree.print();                    },
+                        tree.print();
+                    },
                     Command::Reset => {
                         tree.reset();
                     },

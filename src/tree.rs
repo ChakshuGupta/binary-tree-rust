@@ -1,22 +1,22 @@
 use std::cmp::Ordering;
+use std::fmt;
 
-type Link<T> = Option<Box<Node<T>>>;
+type Link = Option<Box<Node>>;
 
-#[derive(Debug)]
-pub struct Node<T: Ord>{
-    age: T,
+pub struct Node{
+    age: i32,
     name: String,
-    left: Link<T>,
-    right: Link<T>,
+    left: Link,
+    right: Link,
 }
 
 #[derive(Debug)]
-pub struct Tree<T: Ord>{
-    root: Link<T>,
+pub struct Tree{
+    root: Link,
 }
 
-impl<T: Ord> Node<T>{
-    fn new(age: T, name: String) ->Self{
+impl Node{
+    fn new(age: i32, name: String) ->Self{
         Node{
             age: age,
             name: name,
@@ -25,7 +25,7 @@ impl<T: Ord> Node<T>{
         }
     }
 
-    fn contains(&self, age: T, name: String) -> bool {
+    fn contains(&self, age: i32, name: String) -> bool {
         match age.cmp(&self.age){
             Ordering::Equal => {
                 match self.name == name{
@@ -53,12 +53,19 @@ impl<T: Ord> Node<T>{
 
 }
 
-impl<T: Ord> Tree<T>{
+impl fmt::Debug for Node {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Point {{ Name: {}, age: {} }}", self.name, self.age)
+    }
+}
+
+
+impl Tree{
     pub fn new() -> Self {
         Tree { root: None}
     }
 
-    pub fn insert(&mut self, age: T, name: String){
+    pub fn insert(&mut self, age: i32, name: String){
         let mut temp_root = &mut self.root;
 
         while let Some(temp_node) = temp_root {
@@ -72,16 +79,17 @@ impl<T: Ord> Tree<T>{
         }
 
         *temp_root = Some(Box::new(Node::new(age, name)));
+
     }
 
-    pub fn contains(&self, age:T, name:String) -> bool {
+    pub fn contains(&self, age: i32, name:String) -> bool {
         match self.root {
             None => false,
             Some(ref root) => root.contains(age, name),
         }
     }
 
-    pub fn erase(&self, age: T, name: String) -> Option<Node<T>> {
+    pub fn erase(&self, age: i32, name: String) -> Option<Node> {
         unimplemented!()
     }
 
@@ -103,7 +111,7 @@ impl<T: Ord> Tree<T>{
     }
 }
 
-impl<T: Ord> Drop for Tree<T> {
+impl Drop for Tree{
 
     fn drop(&mut self) {
         let mut current_node = self.root.take();
@@ -118,6 +126,7 @@ impl<T: Ord> Drop for Tree<T> {
     }
 }
 
+
 #[cfg(test)]
 mod test{
     use super::Tree;
@@ -129,9 +138,25 @@ mod test{
         tree.insert(2, "b".to_string());
         tree.insert(3, "c".to_string());
 
+        println!("The tree is - {:#?}", tree);
+
         assert_eq!(tree.contains(1, "a".to_string()), true);
         assert_eq!(tree.contains(2, "b".to_string()), true);
         assert_eq!(tree.contains(3, "f".to_string()), false);
         assert_eq!(tree.contains(4, "d".to_string()), false);
+    }
+
+    #[test]
+    fn reset(){
+        let mut tree = Tree::new();
+        tree.insert(1, "a".to_string());
+        tree.insert(2, "b".to_string());
+        tree.insert(3, "c".to_string());
+
+        tree.reset();
+        match tree.root{
+            None => println!("Reset Complete!"),
+            _ => panic!("Reset not complete!"),
+        }
     }
 }
