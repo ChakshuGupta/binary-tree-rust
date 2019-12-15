@@ -69,7 +69,7 @@ fn main() {
                         tree.erase(age, name);
                     },
                     Command::Contains{age, name} => {
-                        tree.contains(age, name);
+                        println!("{}", tree.contains(age, name));
                     },
                     Command::Print => {
                         tree.print();

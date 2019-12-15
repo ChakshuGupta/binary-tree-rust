@@ -157,47 +157,6 @@ impl Drop for Tree{
 }
 
 
-pub struct TreeIter<'a>{
-    prev_nodes: Vec<&'a Node> ,
-    current_tree: &'a mut Tree,
-}
-
-
-/*impl<'a> Iterator for TreeIter<'a>{
-    type Item = &'a Node;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        loop{
-            match self.current_tree.root {
-                None => match self.prev_nodes.pop(){
-                            None => return None,
-                            Some(ref prev_node) => {
-                                self.current_tree.root = prev_node.right;
-                                return Some(prev_node);
-                            }
-                        }
-                Some(ref current_node) => {
-                    if current_node.left.is_some() {
-                        self.prev_nodes.push(&current_node);
-                        self.current_tree.root = current_node.left;
-
-                        continue;
-                    }
-
-                    if current_node.right.is_some(){
-                        self.current_tree.root = current_node.right;
-                        return Some(current_node);
-                    }
-                    self.current_tree.root = None;
-
-                    return Some(current_node);
-                }
-            }
-        }
-    }
-}*/
-
-
 #[cfg(test)]
 mod test{
     use super::Tree;
