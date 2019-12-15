@@ -10,12 +10,13 @@ pub struct Node<T: Ord>{
     right: Link<T>,
 }
 
+#[derive(Debug)]
 pub struct Tree<T: Ord>{
     root: Link<T>,
 }
 
 impl<T: Ord> Node<T>{
-    pub fn new(age: T, name: String) ->Self{
+    fn new(age: T, name: String) ->Self{
         Node{
             age: age,
             name: name,
@@ -24,7 +25,7 @@ impl<T: Ord> Node<T>{
         }
     }
 
-    pub fn contains(&self, age: T, name: String) -> bool {
+    fn contains(&self, age: T, name: String) -> bool {
         match age.cmp(&self.age){
             Ordering::Equal => {
                 match self.name == name{
@@ -49,6 +50,7 @@ impl<T: Ord> Node<T>{
 
         }
     }
+
 }
 
 impl<T: Ord> Tree<T>{
@@ -78,8 +80,43 @@ impl<T: Ord> Tree<T>{
             Some(ref root) => root.contains(age, name),
         }
     }
+
+    pub fn erase(&self, age: T, name: String) -> Option<Node<T>> {
+        unimplemented!()
+    }
+
+
+    pub fn print(&self) {
+        //
+    }
+
+    pub fn reset(&mut self){
+        let mut current_node = self.root.take();
+
+        match current_node {
+            None => return,
+            Some(ref mut node) => {
+                node.right.take();
+                node.left.take();
+            },
+        }
+    }
 }
 
+impl<T: Ord> Drop for Tree<T> {
+
+    fn drop(&mut self) {
+        let mut current_node = self.root.take();
+
+        match current_node {
+            None => return,
+            Some(ref mut node) => {
+                node.right.take();
+                node.left.take();
+            },
+        }
+    }
+}
 
 #[cfg(test)]
 mod test{

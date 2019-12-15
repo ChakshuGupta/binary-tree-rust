@@ -66,16 +66,15 @@ fn main() {
                         tree.insert(age, name);
                     },
                     Command::Erase{age, name} => {
-                        unimplemented!();
+                        tree.erase(age, name);
                     },
                     Command::Contains{age, name} => {
                         tree.contains(age, name);
                     },
                     Command::Print => {
-                        unimplemented!();
-                    },
+                        tree.print();                    },
                     Command::Reset => {
-                        unimplemented!();
+                        tree.reset();
                     },
                     Command::Exit => {
                         break;
