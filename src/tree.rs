@@ -55,7 +55,7 @@ impl Node{
 
 impl fmt::Debug for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Point {{ Name: {}, age: {} }}", self.name, self.age)
+        write!(f, "{{ Name: {}, age: {} }}", self.name, self.age)
     }
 }
 
@@ -99,14 +99,13 @@ impl Tree{
     }
 
     pub fn reset(&mut self){
-        let mut current_node = self.root.take();
+        self.root.take();
+    }
 
-        match current_node {
-            None => return,
-            Some(ref mut node) => {
-                node.right.take();
-                node.left.take();
-            },
+    pub fn is_empty(&self) ->bool{
+        match self.root{
+            None => true,
+            Some(_) => false,
         }
     }
 }
@@ -134,6 +133,9 @@ mod test{
     #[test]
     fn insert(){
         let mut tree = Tree::new();
+
+        assert_eq!(tree.is_empty(), true);
+
         tree.insert(1, "a".to_string());
         tree.insert(2, "b".to_string());
         tree.insert(3, "c".to_string());
@@ -149,6 +151,9 @@ mod test{
     #[test]
     fn reset(){
         let mut tree = Tree::new();
+
+        assert_eq!(tree.is_empty(), true);
+
         tree.insert(1, "a".to_string());
         tree.insert(2, "b".to_string());
         tree.insert(3, "c".to_string());
@@ -158,5 +163,7 @@ mod test{
             None => println!("Reset Complete!"),
             _ => panic!("Reset not complete!"),
         }
+
+        assert_eq!(tree.is_empty(), true);
     }
 }
