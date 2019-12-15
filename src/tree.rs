@@ -70,11 +70,29 @@ impl Node{
         }
     }
 
+    fn print(&mut self) {
+        print!("[ {:?}, ", self);
+
+        match self.left{
+            None => print!("Null "),
+            Some(ref mut left) => left.print()
+        }
+        print!(",");
+
+        match self.right{
+            None => print!("Null "),
+            Some(ref mut right) => {
+                right.print();
+            }
+        }
+        print!("]");
+    }
+
 }
 
 impl fmt::Debug for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{{ Name: {}, age: {} }}", self.name, self.age)
+        write!(f, "{{ {} : {} }}", self.age, self.name)
     }
 }
 
@@ -103,8 +121,12 @@ impl Tree{
     }
 
 
-    pub fn print(&self) {
-        //
+    pub fn print(&mut self) {
+        match self.root{
+            None => println!("Null"),
+            Some(ref mut root) => root.print()
+        }
+        println!("");
     }
 
     pub fn reset(&mut self){
@@ -216,5 +238,18 @@ mod test{
         }
 
         assert_eq!(tree.is_empty(), true);
+    }
+
+    #[test]
+    fn print(){
+        let mut tree = Tree::new();
+
+        assert_eq!(tree.is_empty(), true);
+        tree.insert(1, "a".to_string());
+        tree.insert(2, "b".to_string());
+        tree.insert(3, "c".to_string());
+
+        tree.print();
+
     }
 }
