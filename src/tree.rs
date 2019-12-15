@@ -15,6 +15,7 @@ pub struct Tree{
     root: Link,
 }
 
+
 impl Node{
     fn new(age: i32, name: String) ->Self{
         Node{
@@ -22,6 +23,24 @@ impl Node{
             name: name,
             left: None,
             right: None,
+        }
+    }
+
+    fn insert(&mut self, node: Node){
+        match node.age.cmp(&self.age){
+            Ordering::Less => {
+                match self.left {
+                    None => self.left = Some(Box::new(node)),
+                    Some(ref mut left) => left.insert(node),
+                }
+            },
+            Ordering::Greater => {
+                match self.right{
+                    None => self.right = Some(Box::new(node)),
+                    Some(ref mut right) => right.insert(node),
+                }
+            },
+            _ => {},
         }
     }
 
@@ -41,8 +60,8 @@ impl Node{
                 }
             },
             Ordering::Greater =>{
-                if let Some(ref left) = self.left {
-                    left.contains(age, name)
+                if let Some(ref right) = self.right {
+                    right.contains(age, name)
                 } else{
                     false
                 }
@@ -66,20 +85,10 @@ impl Tree{
     }
 
     pub fn insert(&mut self, age: i32, name: String){
-        let mut temp_root = &mut self.root;
-
-        while let Some(temp_node) = temp_root {
-            match temp_node.age.cmp(&age) {
-                Ordering::Equal => {
-                    return
-                }
-                Ordering::Greater => temp_root = &mut temp_node.right,
-                Ordering::Less => temp_root = &mut temp_node.left,
-            }
+        match self.root {
+            None => self.root = Some(Box::new(Node::new(age, name))),
+            Some(ref mut root) => root.insert(Node::new(age, name)),
         }
-
-        *temp_root = Some(Box::new(Node::new(age, name)));
-
     }
 
     pub fn contains(&self, age: i32, name:String) -> bool {
@@ -126,6 +135,47 @@ impl Drop for Tree{
 }
 
 
+pub struct TreeIter<'a>{
+    prev_nodes: Vec<&'a Node> ,
+    current_tree: &'a mut Tree,
+}
+
+
+/*impl<'a> Iterator for TreeIter<'a>{
+    type Item = &'a Node;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop{
+            match self.current_tree.root {
+                None => match self.prev_nodes.pop(){
+                            None => return None,
+                            Some(ref prev_node) => {
+                                self.current_tree.root = prev_node.right;
+                                return Some(prev_node);
+                            }
+                        }
+                Some(ref current_node) => {
+                    if current_node.left.is_some() {
+                        self.prev_nodes.push(&current_node);
+                        self.current_tree.root = current_node.left;
+
+                        continue;
+                    }
+
+                    if current_node.right.is_some(){
+                        self.current_tree.root = current_node.right;
+                        return Some(current_node);
+                    }
+                    self.current_tree.root = None;
+
+                    return Some(current_node);
+                }
+            }
+        }
+    }
+}*/
+
+
 #[cfg(test)]
 mod test{
     use super::Tree;
@@ -144,7 +194,8 @@ mod test{
 
         assert_eq!(tree.contains(1, "a".to_string()), true);
         assert_eq!(tree.contains(2, "b".to_string()), true);
-        assert_eq!(tree.contains(3, "f".to_string()), false);
+        assert_eq!(tree.contains(3, "c".to_string()), true);
+        assert_eq!(tree.contains(1, "d".to_string()), false);
         assert_eq!(tree.contains(4, "d".to_string()), false);
     }
 
