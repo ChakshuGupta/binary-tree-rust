@@ -52,9 +52,10 @@ fn parse_command(input: String) -> Command {
 
 fn main() {
 
+    let mut tree = Tree::new();
+
     loop {
         let mut input = String::new();
-        let mut tree = Tree::new();
 
         match io::stdin().read_line(&mut input) {
             Ok(0) => {
