@@ -13,7 +13,6 @@ pub struct Node{
 }
 
 //Structure holding tree root
-#[derive(Debug)]
 pub struct Tree{
     root: Link,
 }
@@ -121,16 +120,16 @@ impl Node{
 
     //Print the tree
     fn print(&mut self) {
-        print!("[ {:?}, ", self);
+        print!("[{},", self);
 
         match self.left{
-            None => print!("Null "),
+            None => print!("null"),
             Some(ref mut left) => left.print()
         }
         print!(",");
 
         match self.right{
-            None => print!("Null "),
+            None => print!("null"),
             Some(ref mut right) => {
                 right.print();
             }
@@ -141,9 +140,9 @@ impl Node{
 }
 
 //Setting the format for printing the node struct value
-impl fmt::Debug for Node {
+impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{{ {} : {} }}", self.age, self.name)
+        write!(f, "{{\"{}\":\"{}\"}}", self.age, self.name)
     }
 }
 
@@ -240,7 +239,7 @@ mod test{
         tree.insert(2, "b".to_string());
         tree.insert(3, "c".to_string());
 
-        println!("The tree is - {:#?}", tree);
+        //println!("The tree is - {:#?}", tree);
 
         assert_eq!(tree.contains(1, "a".to_string()), true);
         assert_eq!(tree.contains(2, "b".to_string()), true);
@@ -273,9 +272,11 @@ mod test{
         let mut tree = Tree::new();
 
         assert_eq!(tree.is_empty(), true);
-        tree.insert(1, "a".to_string());
+        tree.insert(11, "a".to_string());
         tree.insert(2, "b".to_string());
-        tree.insert(3, "c".to_string());
+        tree.insert(21, "c".to_string());
+        tree.insert(30, "d".to_string());
+        tree.insert(9, "e".to_string());
 
         tree.print();
 
